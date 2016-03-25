@@ -4,14 +4,14 @@ checks:
 
       ops01:
         uri: https://ops.example.com/health_checks/all
-        callback: rails_health_checks
+        handler: rails_health_checks
         timeout: 25
         frequency: 60
         threshold: 3
 
       qa01:
         uri: https://qa.example.com/health_checks/all
-        callback: rails_health_checks
+        handler: rails_health_checks
         timeout: 25
         frequency: 30
         threshold: 3

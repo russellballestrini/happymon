@@ -15,24 +15,10 @@ def load_entry_points(group_name):
         entry_points[entry_point.name] = entry_point.load()
     return entry_points
 
-# load callbacks / errbacks from 3rd party entry_points.
-happymon_callbacks = load_entry_points('happymon.callbacks')
-happymon_errbacks = load_entry_points('happymon.errbacks')
-
-def get_backs(params):
-    """return a callback,errback tuple from registered"""
-    callback_name = params['callback']
-    errback_name = config.get('errback', callback_name)
-    callback = happymon_callbacks[callback_name]
-    errback = happymon_errbacks[errback_name]
-    return (callback, errback)
-
 def http(params):
-    params['collector'] = http
-    callback, errback = get_backs(params)
     d = getPage(params['uri'], timeout=params.get('timeout', 15))
-    d.addCallback(callback, params)
-    d.addErrback(errback, params)
+    d.addCallback(params['handler_callback'], params)
+    d.addErrback(params['handler_errback'], params)
 
 if __name__ == '__main__':
 
@@ -43,8 +29,34 @@ if __name__ == '__main__':
     # load config dictionary and defaults.
     config = get_config(args.config)
 
-    for target, params in config['checks']['http'].items():
-        http(params)
+    # load callbacks / errbacks from 3rd party entry_points.
+    handler_callbacks = load_entry_points('happymon.callbacks')
+    handler_errbacks = load_entry_points('happymon.errbacks')
+
+    collector_funcs = {
+      'http' : http,
+    }
+
+    # iterate over all collectors (checks).
+    for collector_name in config['checks']:
+
+        # get the collector function by name from collector_funcs registry.
+        collector_func = collector_funcs[collector_name]
+
+        # iterate over all the targets for this collector.
+        for target, params in config['checks'][collector_name].items():
+
+            # attach collector function to params.
+            params['collector'] = collector_func
+
+            # attach handler_callback and handler_errback to params.
+            handler_name = params['handler']
+            params['handler_callback'] = handler_callbacks[handler_name]
+            params['handler_errback']  = handler_errbacks[handler_name]
+
+            # finally call the collector and pass this target's params.
+            # we expect collector functions to be async.
+            collector_func(params)
 
     # enter main reactor loop which never ends.
     reactor.run()
