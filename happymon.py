@@ -28,9 +28,9 @@ def get_backs(params):
     return (callback, errback)
 
 def http(params):
-    uri = params['uri']
+    params['collector'] = http
     callback, errback = get_backs(params)
-    d = getPage(uri, timeout=params.get('timeout', 15))
+    d = getPage(params['uri'], timeout=params.get('timeout', 15))
     d.addCallback(callback, params)
     d.addErrback(errback, params)
 
