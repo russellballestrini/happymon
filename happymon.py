@@ -1,25 +1,30 @@
 from argparse import ArgumentParser
 
+from pkg_resources import iter_entry_points
+
 from twisted.web.client import getPage
 from twisted.internet import task
 from twisted.internet import reactor
 
 from config import get_config
 
-registered_callbacks = {
-  'rails_health_checks' : rails_health_checks,
-}
+def load_entry_points(group_name):
+    """Return a dictionary of entry_points related to given group_name"""
+    entry_points = {}
+    for entry_point in iter_entry_points(group=group_name, name=None):
+        entry_points[entry_point.name] = entry_point.load()
+    return entry_points
 
-registered_errbacks = {
-  'rails_health_checks' : rails_health_checks_err,
-}
+# load callbacks / errbacks from 3rd party entry_points.
+happymon_callbacks = load_entry_points('happymon.callbacks')
+happymon_errbacks = load_entry_points('happymon.errbacks')
 
 def get_backs(params):
     """return a callback,errback tuple from registered"""
     callback_name = params['callback']
     errback_name = config.get('errback', callback_name)
-    callback = registered_callbacks[callback_name]
-    errback = registered_errbacks[errback_name]
+    callback = happymon_callbacks[callback_name]
+    errback = happymon_errbacks[errback_name]
     return (callback, errback)
 
 def http(params):
