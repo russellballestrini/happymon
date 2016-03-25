@@ -1,3 +1,5 @@
+from argparse import ArgumentParser
+
 from twisted.web.client import getPage
 from twisted.internet import task
 from twisted.internet import reactor
@@ -46,8 +48,13 @@ def http(params):
     d.addErrback(errback, params)
 
 if __name__ == '__main__':
+
+    parser = ArgumentParser(description="don't worry, be happy-monitoring")
+    parser.add_argument('-c', '--config', default='config.yml')
+    args = parser.parse_args()
+
     # load config dictionary and defaults.
-    config = get_config('config.yml')
+    config = get_config(args.config)
 
     for target, params in config['checks']['http'].items():
         http(params)
