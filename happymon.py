@@ -6,24 +6,6 @@ from twisted.internet import reactor
 
 from config import get_config
 
-def rails_health_checks(result, params):
-    print('##########################')
-    print(params['uri'])
-    print(result)
-    print(params)
-    reactor.callLater(params.get('frequency', 60), http, params)
-    print('##########################')
-
-def rails_health_checks_err(result, params):
-
-    print('##########################')
-    print(params['uri'])
-    print(result)
-    print(result.value)
-    print(params)
-    reactor.callLater(params.get('frequency', 60), http, params)
-    print('##########################')
-
 registered_callbacks = {
   'rails_health_checks' : rails_health_checks,
 }
@@ -49,7 +31,7 @@ def http(params):
 
 if __name__ == '__main__':
 
-    parser = ArgumentParser(description="don't worry, be happy-monitoring")
+    parser = ArgumentParser(description="don't worry, be happy, mon!")
     parser.add_argument('-c', '--config', default='config.yml')
     args = parser.parse_args()
 

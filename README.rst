@@ -1,5 +1,5 @@
-happy-monitoring
-################
+happymon
+########
 
 Monitoring systems have jumped the shark.  
 
@@ -7,7 +7,9 @@ We need a better way.  Current solutions have a million dependencies, confusing 
 
 I just want to know what broke.
 
-happy-monitoring is _not_:
+happymon is _not_:
 
  * "The Industry Standard In IT Infrastructure Monitoring"
  * "Unified IT monitoring and analytics powering the Intelligent Data Center"
+
+Don't worry, be happy, mon!
