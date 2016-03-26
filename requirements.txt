@@ -1,1 +1,10 @@
+# the core of this software is Twisted's Python Event loop.
 twisted
+
+# config is declared in YAML.
+pyyaml
+
+# allow outbound TLS connections.
+# apt-get install openssl-dev
+# yum install openssl-devel
+pyOpenSSL
