@@ -6,9 +6,7 @@ def http_code(response, params):
 
     Check if the response's HTTP status code is in the list of desired_codes.
     """
-    print(params['uri'])
-    print(response.code)
-    print(response.phrase)
+    print params['uri'], response.code, response.phrase
     if response.code not in params.get('desired_codes', [200]):
         params['incidents'].append('meh an incident happened, meh.. meh!')    
         print(params['incidents'])

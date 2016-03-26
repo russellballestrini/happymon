@@ -11,11 +11,20 @@ checks:
         frequency: 6
         threshold: 3
 
-      example.com-404:
+      example.com-i-desire-404:
         uri: https://example.com/49d8mc749x871
         handler: http_code
         desired_codes:
           - 404
+        timeout: 25
+        frequency: 3
+        threshold: 3
+
+      example.com-i-desire-200-but-end-up-with-404:
+        uri: https://example.com/idi2isi19fd93
+        handler: http_code
+        desired_codes:
+          - 200
         timeout: 25
         frequency: 3
         threshold: 3
