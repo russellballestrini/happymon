@@ -2,16 +2,20 @@ checks:
 
   http:
 
-      ops01:
-        uri: https://ops.example.com/health_checks/all
-        handler: rails_health_checks
+      linkpeek.com:
+        uri: https://linkpeek.com/
+        handler: http_code
+        desired_codes:
+          - 200
         timeout: 25
-        frequency: 60
+        frequency: 6
         threshold: 3
 
-      qa01:
-        uri: https://qa.example.com/health_checks/all
-        handler: rails_health_checks
+      example.com-404:
+        uri: https://example.com/49d8mc749x871
+        handler: http_code
+        desired_codes:
+          - 404
         timeout: 25
-        frequency: 30
+        frequency: 3
         threshold: 3
