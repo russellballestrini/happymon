@@ -3,7 +3,6 @@ from argparse import ArgumentParser
 from pkg_resources import iter_entry_points
 
 from twisted.web.client import getPage
-from twisted.internet import task
 from twisted.internet import reactor
 
 from config import get_config
