@@ -32,9 +32,6 @@ def main():
     # iterate over all checks.
     for check_name, params in config['checks'].items():
 
-        collector_name = params['collector']
-        handler_name = params['handler']
-
         # create a new context object to hold information about this check.
         context = Context(check_name)
 
