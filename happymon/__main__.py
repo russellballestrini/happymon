@@ -4,7 +4,10 @@ from pkg_resources import iter_entry_points
 
 from .config import get_config
 
-from .context import Context
+from .context import (
+  CheckContext,
+  NotifierContext,
+)
 
 from twisted.internet import reactor
 
@@ -28,31 +31,55 @@ def main():
     collectors = load_entry_points('happymon.collectors')
     handlers = load_entry_points('happymon.handlers')
     error_handlers = load_entry_points('happymon.error_handlers')
+    notifiers = load_entry_points('happymon.notifiers')
+
+    notifier_registry = {}
+
+    # iterate over all notifiers.
+    for notifier_name, params in config.get('notifiers', {}).items():
+
+        # create a new notifier context object.
+        notifier = NotifierContext(notifier_name)
+
+        # attach notifier handler function to context object.
+        notifier.handler = notifiers[params['handler']]
+
+        # extra parameters specific to this notifier.
+        notifier.extra = params['extra']
+
+        # register this notifier so we can reference it when building checks.
+        notifier_registry[notifier_name] = notifier
 
     # iterate over all checks.
-    for check_name, params in config['checks'].items():
+    for check_name, params in config.get('checks', {}).items():
 
-        # create a new context object to hold information about this check.
-        context = Context(check_name)
+        # create a new check context object.
+        check = CheckContext(check_name)
 
-        # attach function to context object.
-        context.collector      = collectors[params['collector']]
-        context.handler        = handlers[params['handler']]
-        context.error_handler  = error_handlers[params['handler']]
+        # attach functions to context object.
+        check.collector      = collectors[params['collector']]
+        check.handler        = handlers[params['handler']]
+        check.error_handler  = error_handlers[params['handler']]
+
+        # attach zero or many notifiers to check.
+        for notifier_name in params.get('notifiers', []):
+            check.notifiers.append(notifier_registry[notifier_name])
 
         # get value or default.
-        context.threshold = params.get('threshold', config['threshold'])
-        context.frequency = params.get('frequency', config['frequency'])
-        context.timeout   = params.get('timeout', config['timeout'])
+        check.threshold = params.get('threshold', config['threshold'])
+        check.frequency = params.get('frequency', config['frequency'])
+        check.timeout   = params.get('timeout', config['timeout'])
 
         # extra parameters specific to this collector / handler.
-        context.extra = params['extra']
+        check.extra = params['extra']
 
-        # a collector must take the context as first argument.
+        # finally call collector who does work and registers with reactor.
+        # a collector must take the check context as first argument.
         # we expect collector functions behave asynchronously.
-        context.collector(context)
+        check.collector(check)
 
     # enter main reactor loop which never ends.
+    # this starts the chain reaction.
     reactor.run()
 
 if __name__ == '__main__':

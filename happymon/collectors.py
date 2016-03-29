@@ -20,3 +20,10 @@ def http(context):
     )
     d.addCallback(context.handler, context)
     d.addErrback(context.error_handler, context)
+
+    # TODO: find a better way. Collectors shouldn't care about this. 
+    if len(context.incidents) == context.threshold:
+        for notifier in context.notifiers:
+            d.addCallback(notifier.handler, context, notifier)
+    
+ 

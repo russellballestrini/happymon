@@ -33,6 +33,9 @@ setup(
       'happymon.error_handlers' : [
         'http_code = happymon.handlers:http_code_err',
       ],
+      'happymon.notifiers' : [
+        'smtp = happymon.notifiers:smtp',
+      ],
       'console_scripts': [
         'hm = happymon.__main__:main',
       ],
