@@ -4,6 +4,7 @@ class Context(object):
         self.name = name
         self.incidents = []
         self.alerts = []
+        self.extra = {}
         self.collector = None
         self.handler = None
         self.error_handler = None
