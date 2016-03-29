@@ -1,23 +1,23 @@
 from twisted.internet import reactor
 
-def http_code(response, params):
+def http_code(response, context):
     """
-    This is mostly an example on how to write a handler_callback.
+    This is mostly an example on how to write a handler.
 
     Check if the response's HTTP status code is in the list of desired_codes.
     """
-    print params['uri'], response.code, response.phrase
+    print context.extra['uri'], response.code, response.phrase
     if response.code not in params.get('desired_codes', [200]):
-        params['incidents'].append('meh an incident happened, meh.. meh!')    
-        print(params['incidents'])
-    reactor.callLater(params['frequency'], params['collector'], params) 
-    
-def http_code_err(response, params):
+        context.incidents.append('meh an incident happened, meh.. meh!')
+        print(context.incidents)
+    reactor.callLater(context.frequency, context.collector, context)
+
+def http_code_err(response, context):
     """
-    this is mostly an example on how to write a handler_errback.
+    This is mostly an example on how to write an error_handler.
     """
     # it's always an incident when the errback is called, I guess.
-    print(params['uri'])
-    params['incidents'].append('meh an incident happened, meh.. meh!')    
-    print(params['incidents'])
-    reactor.callLater(params['frequency'], params['collector'], params) 
+    print context.extra['uri']
+    context.incidents.append('meh an incident happened, meh.. meh!')
+    print(context.incidents)
+    reactor.callLater(context.frequency, context.collector, context)

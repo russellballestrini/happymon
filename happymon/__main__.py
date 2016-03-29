@@ -2,11 +2,11 @@ from argparse import ArgumentParser
 
 from pkg_resources import iter_entry_points
 
-from twisted.internet import reactor
-from twisted.web.client import Agent
-from twisted.web.http_headers import Headers
-
 from .config import get_config
+
+from .context import Context
+
+from twisted.internet import reactor
 
 def load_entry_points(group_name):
     """Return a dictionary of entry_points related to given group_name"""
@@ -15,66 +15,45 @@ def load_entry_points(group_name):
         entry_points[entry_point.name] = entry_point.load()
     return entry_points
 
-from twisted.internet.ssl import ClientContextFactory
-
-class WebClientContextFactory(ClientContextFactory):
-    def getContext(self, hostname, port):
-        return ClientContextFactory.getContext(self)
-
-def http(params):
-    # Reference:
-    #   https://twistedmatrix.com/documents/current/web/howto/client.html
-    agent = Agent(reactor, WebClientContextFactory())
-    d = agent.request(
-        'GET',
-        params['uri'],
-        Headers({'User-Agent' : ['happymon']}),
-        None
-    )
-    d.addCallback(params['handler_callback'], params)
-    d.addErrback(params['handler_errback'], params)
-
 def main():
     """main cli console script entry point."""
     parser = ArgumentParser(description="don't worry, be happy, mon!")
     parser.add_argument('-c', '--config', default='config.yml')
     args = parser.parse_args()
 
-    # load config dictionary and defaults.
+    # load config dictionary and defaults from file path.
     config = get_config(args.config)
 
-    # load callbacks / errbacks from 3rd party entry_points.
-    handler_callbacks = load_entry_points('happymon.callbacks')
-    handler_errbacks = load_entry_points('happymon.errbacks')
+    # load and register collectors and handlers.
+    collectors = load_entry_points('happymon.collectors')
+    handlers = load_entry_points('happymon.handlers')
+    error_handlers = load_entry_points('happymon.error_handlers')
 
-    collector_funcs = {
-      'http' : http,
-    }
+    # iterate over all checks.
+    for check_name, params in config['checks'].items():
 
-    # iterate over all collectors (checks).
-    for collector_name in config['checks']:
+        collector_name = params['collector']
+        handler_name = params['handler']
 
-        # get the collector function by name from collector_funcs registry.
-        collector_func = collector_funcs[collector_name]
+        # create a new context object to hold information about this check.
+        context = Context(check_name)
 
-        # iterate over all the targets for this collector.
-        for target, params in config['checks'][collector_name].items():
+        # attach function to context object.
+        context.collector      = collectors[params['collector']]
+        context.handler        = handlers[params['handler']]
+        context.error_handler  = error_handlers[params['handler']]
 
-            # attach collector function to params.
-            params['collector'] = collector_func
+        # get value or default.
+        context.threshold = params.get('threshold', config['threshold'])
+        context.frequency = params.get('frequency', config['frequency'])
+        context.timeout   = params.get('timeout', config['timeout'])
 
-            # attach handler_callback and handler_errback to params.
-            handler_name = params['handler']
-            params['handler_callback'] = handler_callbacks[handler_name]
-            params['handler_errback']  = handler_errbacks[handler_name]
+        # extra parameters specific to this collector / handler.
+        context.extra = params['extra']
 
-            # todo: maybe all this config mutation should be in the config mod?
-            # create a empty list for incidents.
-            params['incidents'] = []
-
-            # finally call the collector and pass this target's params.
-            # we expect collector functions to be async.
-            collector_func(params)
+        # a collector must take the context as first argument.
+        # we expect collector functions behave asynchronously.
+        context.collector(context)
 
     # enter main reactor loop which never ends.
     reactor.run()

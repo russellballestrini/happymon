@@ -24,10 +24,13 @@ setup(
 
     install_requires = requires,
     entry_points = {
-      'happymon.callbacks' : [
+      'happymon.collectors' : [
+        'http = happymon.collectors:http',
+      ],
+      'happymon.handlers' : [
         'http_code = happymon.handlers:http_code',
       ],
-      'happymon.errbacks' : [
+      'happymon.error_handlers' : [
         'http_code = happymon.handlers:http_code_err',
       ],
       'console_scripts': [
