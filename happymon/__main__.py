@@ -45,7 +45,7 @@ def main():
         notifier.handler = notifiers[params['handler']]
 
         # extra parameters specific to this notifier.
-        notifier.extra = params['extra']
+        notifier.extra = params.get('extra', {})
 
         # register this notifier so we can reference it when building checks.
         notifier_registry[notifier_name] = notifier
@@ -71,7 +71,7 @@ def main():
         check.timeout   = params.get('timeout', config['timeout'])
 
         # extra parameters specific to this collector / handler.
-        check.extra = params['extra']
+        check.extra = params.get('extra', {})
 
         # finally call collector who does work and registers with reactor.
         # a collector must take the check context as first argument.

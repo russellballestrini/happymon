@@ -7,6 +7,9 @@ from datetime import datetime
 # catch socket errors when postfix isn't running...
 from socket import error as socket_error
 
+def stdout(context, notifier):
+    print("ALERT: {} {}".format(context, notifier))
+
 def smtp(context, notifier):
 
     NOW = datetime.now()
@@ -18,7 +21,7 @@ def smtp(context, notifier):
     msg = MIMEText(message, 'html')
 
     # TODO: support custom subjects?
-    msg['Subject'] = "{} | {} | happymon".format(context.incident[0], NOW)
+    msg['Subject'] = "{} | {} | happymon".format(context.incidents[0], NOW)
 
     # TODO: if from / to raises key error, what do we do?
     msg['From']    = notifier.extra['from']

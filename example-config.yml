@@ -2,22 +2,28 @@
 #frequency: 60
 #timeout: 20
 
-checks:
+notifiers:
 
-  linkpeek.com:
-    collector: http
-    handler: http_code
+  email-admins:
+    handler: smtp
     extra:
-      uri: https://linkpeek.com/
-      desired_codes:
-        - 200
-    timeout: 25
-    frequency: 3
-    threshold: 3
+      to: admins@example.com
+      from: root@localhost
+
+  emit-to-stdout:
+    handler: stdout
+
+checks:
 
   example.com-i-desire-404:
     collector: http
     handler: http_code
+    timeout: 25
+    frequency: 3
+    threshold: 3
+    notifiers:
+      - email-admins
+      - emit-to-stdout
     extra:
       uri: https://example.com/49d8mc749x871
       desired_codes:
@@ -28,3 +34,5 @@ checks:
     handler: http_code
     extra:
       uri: https://example.com/49d8mc749x871
+    notifiers:
+      - emit-to-stdout

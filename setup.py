@@ -35,6 +35,7 @@ setup(
       ],
       'happymon.notifiers' : [
         'smtp = happymon.notifiers:smtp',
+        'stdout = happymon.notifiers:stdout',
       ],
       'console_scripts': [
         'hm = happymon.__main__:main',
