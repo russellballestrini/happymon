@@ -5,6 +5,8 @@ twisted
 pyyaml
 
 # allow outbound TLS connections.
-# apt-get install openssl-dev
-# yum install openssl-devel
+# apt-get install openssl-dev libffi-dev libssl-dev
+# yum install openssl-devel libffi-devel libssl-devel
 pyOpenSSL
+
+service_identity
