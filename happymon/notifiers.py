@@ -8,14 +8,15 @@ from datetime import datetime
 from socket import error as socket_error
 
 def stdout(context, notifier):
-    print("ALERT: {} {}".format(context.name, notifier))
+    message = context.name + ': ' + ', '.join(set(context.incidents))
+    print("ALERT: {}".format(message))
 
 def smtp(context, notifier):
 
     NOW = datetime.now()
 
     # TODO: support custom body templates?
-    message = context.name + str(context.incidents)
+    message = context.name + ': ' + ', '.join(set(context.incidents))
 
     # TODO: support multipart message with both text and HTML.
     msg = MIMEText(message, 'html')
