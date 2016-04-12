@@ -8,20 +8,20 @@ from datetime import datetime
 from socket import error as socket_error
 
 def stdout(context, notifier):
-    print("ALERT: {} {}".format(context, notifier))
+    print("ALERT: {} {}".format(context.name, notifier))
 
 def smtp(context, notifier):
 
     NOW = datetime.now()
 
     # TODO: support custom body templates?
-    message = str(context.incidents)
+    message = context.name + str(context.incidents)
 
     # TODO: support multipart message with both text and HTML.
     msg = MIMEText(message, 'html')
 
     # TODO: support custom subjects?
-    msg['Subject'] = "{} | {} | happymon".format(context.incidents[0], NOW)
+    msg['Subject'] = "{} | {} | {} | happymon".format(context.name, context.incidents[0], NOW)
 
     # TODO: if from / to raises key error, what do we do?
     msg['From']    = notifier.extra['from']

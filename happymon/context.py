@@ -37,6 +37,7 @@ class CheckContext(object):
         if self.hit_threshold and not self.alarming:
             self.fire_alarm()
 
+
 class NotifierContext(object):
     def __init__(self, name):
         # TODO: one line comment describing each of these attributes.
