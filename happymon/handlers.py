@@ -11,8 +11,7 @@ def http_code(response, context):
         context.incidents.append('desired code incident')
     else:
         context.clear_alarm()
-    context.house_keeping()
-    reactor.callLater(context.frequency, context.collector, context)
+    context.house_keeping(reactor)
 
 def http_code_err(response, context):
     """
@@ -21,5 +20,4 @@ def http_code_err(response, context):
     # it's always an incident when the errback is called, I guess.
     context.incidents.append('http_code_err')
     print context.name, context.extra['uri'], context.incidents
-    context.house_keeping()
-    reactor.callLater(context.frequency, context.collector, context)
+    context.house_keeping(reactor)

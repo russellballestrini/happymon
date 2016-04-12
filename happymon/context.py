@@ -32,10 +32,14 @@ class CheckContext(object):
         self.archived_incidents += self.incidents
         self.incidents = []
 
-    def house_keeping(self):
+    def house_keeping(self, reactor):
         """house keeping."""
+
         if self.hit_threshold and not self.alarming:
             self.fire_alarm()
+
+        # call collector after frequency seconds, and pass this checks context.
+        reactor.callLater(self.frequency, self.collector, self)
 
 
 class NotifierContext(object):
