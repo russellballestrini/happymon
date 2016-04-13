@@ -18,20 +18,30 @@ def load_entry_points(group_name):
         entry_points[entry_point.name] = entry_point.load()
     return entry_points
 
+def emit_plugins(plugin_type, plugins):
+    print('{}: {}'.format(plugin_type, ', '.join(plugins)))
+
 def main():
     """main cli console script entry point."""
     parser = ArgumentParser(description="don't worry, be happy, mon!")
     parser.add_argument('-c', '--config', default='config.yml')
+    parser.add_argument('-l', '--list-plugins', action='store_true', default=False)
     args = parser.parse_args()
-
-    # load config dictionary and defaults from file path.
-    config = get_config(args.config)
 
     # load and register collectors and handlers.
     collectors = load_entry_points('happymon.collectors')
     handlers = load_entry_points('happymon.handlers')
     error_handlers = load_entry_points('happymon.error_handlers')
     notifiers = load_entry_points('happymon.notifiers')
+
+    if args.list_plugins == True:
+        emit_plugins('collectors', collectors.keys())
+        emit_plugins('handlers', handlers.keys())
+        emit_plugins('notifiers', notifiers.keys())
+        exit()
+
+    # load config dictionary and defaults from file path.
+    config = get_config(args.config)
 
     notifier_registry = {}
 
