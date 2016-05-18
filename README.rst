@@ -31,7 +31,7 @@ Install::
 
  python setup.py develop # or you may pass `install`
 
-Verify:
+Verify::
 
  hm --help
  
