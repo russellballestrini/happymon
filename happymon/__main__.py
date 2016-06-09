@@ -24,7 +24,7 @@ def emit_plugins(plugin_type, plugins):
 def main():
     """main cli console script entry point."""
     parser = ArgumentParser(description="don't worry, be happy, mon!")
-    parser.add_argument('-c', '--config', default='config.yml')
+    parser.add_argument('config')
     parser.add_argument('-l', '--list-plugins', action='store_true', default=False)
     args = parser.parse_args()
 
