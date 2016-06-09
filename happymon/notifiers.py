@@ -24,13 +24,15 @@ def smtp(context, notifier):
     # TODO: support custom subjects?
     msg['Subject'] = "{} | {} | {} | happymon".format(context.name, context.incidents[0], NOW)
 
-    # TODO: if 'from' / 'to' raises key error, what do we do?
+    # TODO: if 'from' raises key error, what do we do?
     msg['From']    = notifier.extra['from']
 
     # allow the extra 'to' to be a string or a list of strings.
-    msg['To']      = notifier.extra['to']
+    # TODO: if 'to' raises key error, what do we do?
     if isinstance(notifier.extra['to'], list):
         msg['To']  = ', '.join(notifier.extra['to'])
+    else:
+        msg['To']  = notifier.extra['to']
 
     # TODO: react to socket error when postfix/sendmail not running.
     s = smtplib.SMTP('localhost')
