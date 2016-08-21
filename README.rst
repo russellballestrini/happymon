@@ -66,6 +66,7 @@ Config
 Here is a real life example that I use to test the health of one of my services:
 
 **hm-prd.conf**::
+
  #threshold: 3
  #frequency: 60
  #timeout: 20
