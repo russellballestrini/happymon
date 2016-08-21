@@ -15,7 +15,7 @@ happymon is _not_:
 Don't worry, be happy, mon!
 
 Install
-########
+===============
 
 We always recommend installing python applications into a python virtualenv.
 
@@ -36,7 +36,7 @@ Verify::
  hm --help
 
 List plugins
-==============
+================
 
 happymon is extendable via plugins. By default the following plugins are automatically installed.
 ::
@@ -58,10 +58,10 @@ Handlers take the results from Collectors and handle making decisions. For examp
 
 Notifiers get triggered when something interesting happens. For example, the smtp notifier can send a developer an email when their web service is down.
 
-
  
 Config
-#######
+==============
+
 
 Here is a real life example that I use to test the health of one of my services:
 
@@ -106,3 +106,15 @@ Here is a real life example that I use to test the health of one of my services:
      notifiers:
        - email-admins
        - emit-to-stdout
+
+
+example
+===========
+
+::
+
+ hm --config hm-prd.conf 
+ linkpeek-api https://linkpeek.com/api/v1?uri=http%3A//google.com&apikey=9fhvyH9KP&token=dfad5650142e3e0ef0b9c4bc9ea9d8dd&size=336x336&ttl=90 302 Found
+ linkpeek-web https://linkpeek.com 200 OK
+
+
