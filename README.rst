@@ -9,8 +9,8 @@ I just want to know what broke.
 
 happymon is _not_:
 
- * "The Industry Standard In IT Infrastructure Monitoring"
- * "Unified IT monitoring and analytics powering the Intelligent Data Center"
+* "The Industry Standard In IT Infrastructure Monitoring"
+* "Unified IT monitoring and analytics powering the Intelligent Data Center"
 
 Don't worry, be happy, mon!
 
