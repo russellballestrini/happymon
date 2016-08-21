@@ -24,8 +24,8 @@ def emit_plugins(plugin_type, plugins):
 def main():
     """main cli console script entry point."""
     parser = ArgumentParser(description="don't worry, be happy, mon!")
-    parser.add_argument('config')
     parser.add_argument('-l', '--list-plugins', action='store_true', default=False)
+    parser.add_argument('-c', '--config', default=None, metavar='/path/to/config.yml')
     args = parser.parse_args()
 
     # load and register collectors and handlers.
@@ -38,6 +38,10 @@ def main():
         emit_plugins('collectors', collectors.keys())
         emit_plugins('handlers', handlers.keys())
         emit_plugins('notifiers', notifiers.keys())
+        exit()
+
+    if args.config is None:
+        parser.print_help()
         exit()
 
     # load config dictionary and defaults from file path.
