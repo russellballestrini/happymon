@@ -17,3 +17,6 @@ pip>=8.1.2
 # versions of python older then 2.7.7 need the following packages:
 # pip install pyasn1 attrs six cryptography zope.interface>=3.6.0
 pyasn1
+
+# human readable timedeltas.
+ago

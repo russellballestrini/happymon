@@ -7,22 +7,24 @@ from datetime import datetime
 # catch socket errors when postfix isn't running...
 from socket import error as socket_error
 
+
 def stdout(context, notifier):
-    message = context.name + ': ' + ', '.join(set(context.incidents))
+    message = context.name + ': ' + ', '.join([str(i) for i in set(context.incidents)])
     print("ALERT: {}".format(message))
 
 def smtp(context, notifier):
 
-    NOW = datetime.now()
+    incident = context.incidents[0]
 
     # TODO: support custom body templates?
-    message = context.name + ': ' + ', '.join(set(context.incidents))
+    message = '{}: {}<br><br>'.format(context.name, context.extra)
+    message += 'incidents: <br><br>' + '<br>'.join([str(i) for i in context.incidents])
 
     # TODO: support multipart message with both text and HTML.
     msg = MIMEText(message, 'html')
 
     # TODO: support custom subjects?
-    msg['Subject'] = "{} | {} | {} | happymon".format(context.name, context.incidents[0], NOW)
+    msg['Subject'] = "{} | {} | {} | happymon".format(context.name, incident, incident.timestamp)
 
     # TODO: if 'from' raises key error, what do we do?
     msg['From']    = notifier.extra['from']
