@@ -1,22 +1,8 @@
-# the core of this software is Twisted's Python Event loop.
-twisted
-
 # config is declared in YAML.
 pyyaml
 
-# allow outbound TLS connections.
-# apt-get install openssl-dev libffi-dev libssl-dev
-# yum install openssl-devel libffi-devel libssl-devel
-pyOpenSSL
-
-service_identity
-
-# upgrade pip because old pip is bad.
-pip>=8.1.2
-
-# versions of python older then 2.7.7 need the following packages:
-# pip install pyasn1 attrs six cryptography zope.interface>=3.6.0
-pyasn1
-
 # human readable timedeltas.
 ago
+
+# async http client / server library.
+aiohttp

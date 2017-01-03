@@ -11,7 +11,7 @@ with open('requirements.txt', 'r') as f:
 
 setup( 
     name = 'happymon',
-    version = '0.0.1',
+    version = '0.0.2',
     description = 'happymon: monitoring with YAML',
     keywords = 'happymon: monitoring with YAML',
     long_description = open('README.rst').read(),
@@ -30,9 +30,6 @@ setup(
       'happymon.handlers' : [
         'http_code = happymon.handlers:http_code',
       ],
-      'happymon.error_handlers' : [
-        'http_code = happymon.handlers:http_code_err',
-      ],
       'happymon.notifiers' : [
         'smtp = happymon.notifiers:smtp',
         'stdout = happymon.notifiers:stdout',
@@ -45,10 +42,6 @@ setup(
         'Intended Audience :: Operators, Developers, System Engineers',
         'Natural Language :: English',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        #'Programming Language :: Python :: 3',
-        #'Programming Language :: Python :: 3.3',
-        #'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
 )

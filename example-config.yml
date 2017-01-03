@@ -13,9 +13,10 @@ notifiers:
   emit-to-stdout:
     handler: stdout
 
+
 checks:
 
-  example.com-i-desire-404:
+  iana-desire-200:
     collector: http
     handler: http_code
     timeout: 25
@@ -25,14 +26,18 @@ checks:
       - email-admins
       - emit-to-stdout
     extra:
-      uri: https://example.com/49d8mc749x871
-      desired_codes:
-        - 404
+      uri: http://www.iana.org/domains/reserved
 
-  example.com-i-desire-200-but-end-up-with-404:
+  iana-desire-404:
     collector: http
     handler: http_code
-    extra:
-      uri: https://example.com/49d8mc749x871
+    timeout: 25
+    frequency: 3
+    threshold: 3
     notifiers:
+      - email-admins
       - emit-to-stdout
+    extra:
+      uri: http://www.iana.org/domains/reserved/example-404
+      desired_codes:
+        - 404

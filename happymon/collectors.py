@@ -1,22 +1,16 @@
-from twisted.internet import reactor
-from twisted.web.client import Agent
-from twisted.web.http_headers import Headers
+import asyncio
+import aiohttp
+import async_timeout
 
-from twisted.internet.ssl import ClientContextFactory
+async def http(context):
+    await asyncio.sleep(context.frequency)
+    async with aiohttp.ClientSession(loop=context.loop) as session:
 
-class WebClientFactory(ClientContextFactory):
-    def getContext(self, hostname, port):
-        return ClientContextFactory.getContext(self)
+        try:
+            with async_timeout.timeout(context.timeout):
+                async with session.get(context.extra['uri']) as response:
+                    context.handler(response, context)
 
-def http(context):
-    # Reference:
-    #   https://twistedmatrix.com/documents/current/web/howto/client.html
-    agent = Agent(reactor, WebClientFactory())
-    d = agent.request(
-        'GET',
-        context.extra['uri'],
-        Headers({'User-Agent' : ['happymon']}),
-        None
-    )
-    d.addCallback(context.handler, context)
-    d.addErrback(context.error_handler, context)
+        except asyncio.TimeoutError:
+            context.new_incident('timeout')
+            context.house_keeping()
