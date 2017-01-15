@@ -5,7 +5,11 @@ Description=happymon - monitoring system
 
 [Service]
 
+# the default path to look for the hm config file.
 Environment=HAPPYMON_CONFIG=/etc/hm.conf
+
+# set this to allow stdout/stderr to show up.
+Environment=PYTHONUNBUFFERED=true
 
 ExecStart=/usr/local/bin/hm
 ExecStop=
