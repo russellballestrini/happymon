@@ -1,3 +1,5 @@
+from os import environ
+
 from argparse import ArgumentParser
 
 from pkg_resources import iter_entry_points
@@ -25,7 +27,7 @@ def main():
     """main cli console script entry point."""
     parser = ArgumentParser(description="don't worry, be happy, mon!")
     parser.add_argument('-l', '--list-plugins', action='store_true', default=False)
-    parser.add_argument('-c', '--config', default=None, metavar='/path/to/config.yml')
+    parser.add_argument('-c', '--config', default=environ.get('HAPPYMON_CONFIG', None), metavar='/path/to/config.yml')
     args = parser.parse_args()
 
     # load and register collectors and handlers.

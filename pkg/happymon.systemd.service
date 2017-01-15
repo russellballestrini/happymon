@@ -1,0 +1,30 @@
+# /usr/lib/systemd/system/happymon.service
+
+[Unit]
+Description=happymon - monitoring system
+
+[Service]
+
+Environment=HAPPYMON_CONFIG=/etc/hm.conf
+
+ExecStart=/usr/local/bin/hm
+ExecStop=
+
+# Restart service after all crashes but wait 10 seconds between restarts.
+Restart=always
+RestartSec=10
+
+# output stdout and stderr to syslog. (/var/log/messages)
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=happymon
+
+# define the user and group to own the process.
+#User=node
+#Group=node
+
+# change directory before running ExecStart command.
+WorkingDirectory=/opt
+
+[Install]
+WantedBy=multi-user.target

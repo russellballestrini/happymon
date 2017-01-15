@@ -26,10 +26,15 @@ Download or checkout all of the code from this repository::
 Change present working directory to happymon::
 
  cd happymon
+
+Upgrade pip and setuptools::
+
+ sudo pip3 install --upgrade pip setuptools
  
 Install::
 
- python setup.py develop # or you may pass `install`
+ sudo python3 setup.py install
+ sudo pip3 install -r requirements.txt
 
 Verify::
 
@@ -108,7 +113,7 @@ Here is a real life example that I use to test the health of one of my services:
        - emit-to-stdout
 
 
-example
+Example
 ===========
 
 ::
@@ -117,4 +122,29 @@ example
  linkpeek-api https://linkpeek.com/api/v1?uri=http%3A//google.com&apikey=9fhvyH9KP&token=dfad5650142e3e0ef0b9c4bc9ea9d8dd&size=336x336&ttl=90 302 Found
  linkpeek-web https://linkpeek.com 200 OK
 
+Service
+==========
+
+Install Service
+---------------
+
+Here is how you install the service on either upstart or systemd.
+
+upstart::
+
+ sudo cp pkg/happymon.upstart.conf /etc/init/happymon.conf
+
+systemd::
+
+ sudo cp pkg/happymon.systemd.service /lib/systemd/system/happymon.service
+ sudo systemctl enable happymon.service
+
+
+Test
+-------------
+
+::
+
+ sudo service happymon status
+ sudo service happymon start
 
